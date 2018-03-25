@@ -142,7 +142,7 @@ export default {
                     
                   },
                   {
-                    path: "/example/map",
+                    path: "/Home/map",
                     name: "地图页面"
                   }
                 ]

@@ -16,6 +16,7 @@ export default new Router({
       children:[
         {path: 'Content',name: 'Content',component: Content},
         {path: 'WorkPlan',name: 'WorkPlan',component: WorkPlan},
+        {path: 'map',name: 'map',component: Content},
       ]
     },
   ]

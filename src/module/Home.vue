@@ -33,16 +33,21 @@
             </el-menu>
     </el-aside>
     <el-main>
-        <el-tabs value="1"   type="border-card" closable @tab-remove="removeTab">
+        <el-tabs v-model="tbsValue" @tab-click="clickTab"   type="card" @tab-remove="removeTab">
             <el-tab-pane 
-              v-for="(item) in editableTabs2"
+              v-for="(item) in tbsArr"
+              
               :key="item.name"
               :label="item.title"
               :name="item.name"
+              :closable="item.closable"
               >
             </el-tab-pane>
         </el-tabs>
-              <router-view ></router-view>
+        <div>asd</div>
+              <router-view >
+                asd
+              </router-view>
     </el-main>
   </el-container>
 </el-container>
@@ -58,26 +63,50 @@ export default {
       msg: "首页",
       isCollapse: false,
       navList: tools.getCache("UserInfo").MenuList,
-        editableTabs2: [{
+      tbsArr:[{
           title: '首页',
-          name: '1',
-          content: 'Tab 1 content',
-          isclosable:false
-        },],
-        tabIndex: 1
+          name: 'HomeContent',
+          closable:false,
+        }],
+      tabIndex: 1,
+      MenuArr:this.getMenuArr(tools.getCache("UserInfo").MenuList),
+      tbsValue:"HomeContent"
     };
   },
 
   computed: {
     onRoutes() {
       return this.$route.path;
-    }
+    },
   },
   methods: {
     selectMenu(index,indexPath){
         console.log(index)
-        console.log(indexPath)
-        return false
+        console.log( this.MenuArr)
+       
+        for (let i = 0; i < this.MenuArr.length; i++) {
+          if (this.MenuArr[i].name==index) {
+            this.MenuArr[i].isShow=true;
+          }
+        }
+         this.addTab(index)
+    },
+    getMenuArr(obj,arr){
+       var arr=arr ||{};
+        for (let i = 0; i < obj.length; i++) {
+          if (obj[i].path && obj[i].path!="") {
+            arr[obj[i].path]={
+              title:obj[i].name,
+              name:obj[i].path,
+              closable:true
+            };
+          }
+          if (obj[i].child) {
+               this.getMenuArr(obj[i].child,arr)
+          }
+        }
+        console.log(arr)
+        return arr;
     },
     handleOpen(key, keyPath) {
       console.log(keyPath);
@@ -90,20 +119,22 @@ export default {
     handisCollapse() {
       this.isCollapse = !this.isCollapse;
     },
+    clickTab(tab,a,c){
+       if (tab.name!="HomeContent") {
+       this.$router.push(tab.name) 
+       }
+    },
     addTab(targetName) {
-        let newTabName = ++this.tabIndex + '';
-        this.editableTabs2.push({
-          title: 'New Tab',
-          name: newTabName,
-          content: 'New Tab content'
-        });
-        this.editableTabsValue2 = newTabName;
+        if (this.tbsArr.indexOf(this.MenuArr[targetName])==-1) {
+        this.tbsArr.push(this.MenuArr[targetName])          
+        }
+        this.tbsValue = targetName;
     },
     removeTab(targetName) {
-          let tabs = this.editableTabs2;
-          let activeName = this.editableTabsValue2;
-          if (activeName === targetName) {
-            tabs.forEach((tab, index) => {
+          let tabs = this.tbsArr;
+           let activeName = this.tbsValue;
+          if (activeName  === targetName) {
+             tabs.forEach((tab, index) => {
               if (tab.name === targetName) {
                 let nextTab = tabs[index + 1] || tabs[index - 1];
                 if (nextTab) {
@@ -112,10 +143,15 @@ export default {
               }
             });
           }
+          //shou
+          if ( targetName!=="HomeContent") {
+             this.tbsArr = tabs.filter(tab => {
+             return tab.name != targetName});
+          }
           
-          this.editableTabsValue2 = activeName;
-          this.editableTabs2 = tabs.filter(tab => tab.name !== targetName);
+           this.tbsValue = activeName;
         }
+  
   }
 };
 </script>
@@ -139,21 +175,5 @@ export default {
   width: 200px;
   min-height: 400px;
 }
-.el-tabs{
-  height: 39px;
-  overflow: hidden;
-}
-.el-main .el-tabs__nav{
-  border-radius:0;
-}
-.el-tabs__content{
-  height: 100px;
-}
-.el-tabs--border-card>.el-tabs__header{
-    border-bottom: 1px solid red !important
 
-}
-.el-tabs .el-tabs__item .el-icon-close::before{
-  display: none;
-}
 </style>
