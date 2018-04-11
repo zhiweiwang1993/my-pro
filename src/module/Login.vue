@@ -131,19 +131,12 @@ export default {
                 icon:"el-icon-info",
                 child: [
                   {
-                    path: "/Home/Content",
-                    name: "列表页面",
-                    permission: ["outport"]
-                  },
-                  {
                     path: "/Home/WorkPlan",
-                    name: "图表页面",
-                    permission: ["outport"]
-                    
+                    name: "工作计划",
                   },
                   {
-                    path: "/Home/map",
-                    name: "地图页面"
+                    path: "/Home/WorkStatistics",
+                    name: "工作统计"
                   }
                 ]
               },

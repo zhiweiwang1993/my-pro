@@ -44,10 +44,13 @@
               >
             </el-tab-pane>
         </el-tabs>
-        <div>asd</div>
-              <router-view >
-                asd
-              </router-view>
+        <div class="content">
+           <keep-alive>
+             <router-view ></router-view>
+            </keep-alive>
+        </div>
+
+        
     </el-main>
   </el-container>
 </el-container>
@@ -55,7 +58,7 @@
 </template>
 
 <script>
-import tools from '../assets/tools.js'
+import tools from "../assets/tools.js";
 export default {
   name: "Home",
   data() {
@@ -63,50 +66,52 @@ export default {
       msg: "首页",
       isCollapse: false,
       navList: tools.getCache("UserInfo").MenuList,
-      tbsArr:[{
-          title: '首页',
-          name: 'HomeContent',
-          closable:false,
-        }],
+      tbsArr: [
+        {
+          title: "首页",
+          name: "HomeContent",
+          closable: false
+        }
+      ],
       tabIndex: 1,
-      MenuArr:this.getMenuArr(tools.getCache("UserInfo").MenuList),
-      tbsValue:"HomeContent"
+      MenuArr: this.getMenuArr(tools.getCache("UserInfo").MenuList),
+      tbsValue: "HomeContent"
     };
   },
 
   computed: {
     onRoutes() {
       return this.$route.path;
-    },
+    }
   },
   methods: {
-    selectMenu(index,indexPath){
-        console.log(index)
-        console.log( this.MenuArr)
-       
-        for (let i = 0; i < this.MenuArr.length; i++) {
-          if (this.MenuArr[i].name==index) {
-            this.MenuArr[i].isShow=true;
-          }
+    selectMenu(index, indexPath) {
+      console.log(index);
+      console.log(this.MenuArr);
+
+      for (let i = 0; i < this.MenuArr.length; i++) {
+        if (this.MenuArr[i].name == index) {
+          this.MenuArr[i].isShow = true;
         }
-         this.addTab(index)
+      }
+      this.addTab(index);
     },
-    getMenuArr(obj,arr){
-       var arr=arr ||{};
-        for (let i = 0; i < obj.length; i++) {
-          if (obj[i].path && obj[i].path!="") {
-            arr[obj[i].path]={
-              title:obj[i].name,
-              name:obj[i].path,
-              closable:true
-            };
-          }
-          if (obj[i].child) {
-               this.getMenuArr(obj[i].child,arr)
-          }
+    getMenuArr(obj, arr) {
+      var arr = arr || {};
+      for (let i = 0; i < obj.length; i++) {
+        if (obj[i].path && obj[i].path != "") {
+          arr[obj[i].path] = {
+            title: obj[i].name,
+            name: obj[i].path,
+            closable: true
+          };
         }
-        console.log(arr)
-        return arr;
+        if (obj[i].child) {
+          this.getMenuArr(obj[i].child, arr);
+        }
+      }
+      console.log(arr);
+      return arr;
     },
     handleOpen(key, keyPath) {
       console.log(keyPath);
@@ -119,39 +124,42 @@ export default {
     handisCollapse() {
       this.isCollapse = !this.isCollapse;
     },
-    clickTab(tab,a,c){
-       if (tab.name!="HomeContent") {
-       this.$router.push(tab.name) 
-       }
+    clickTab(tab, a, c) {
+      if (tab.name != "HomeContent") {
+        this.$router.push(tab.name);
+      }
     },
     addTab(targetName) {
-        if (this.tbsArr.indexOf(this.MenuArr[targetName])==-1) {
-        this.tbsArr.push(this.MenuArr[targetName])          
-        }
-        this.tbsValue = targetName;
+      if (this.tbsArr.indexOf(this.MenuArr[targetName]) == -1) {
+        this.tbsArr.push(this.MenuArr[targetName]);
+      }
+      this.tbsValue = targetName;
     },
     removeTab(targetName) {
-          let tabs = this.tbsArr;
-           let activeName = this.tbsValue;
-          if (activeName  === targetName) {
-             tabs.forEach((tab, index) => {
-              if (tab.name === targetName) {
-                let nextTab = tabs[index + 1] || tabs[index - 1];
-                if (nextTab) {
-                  activeName = nextTab.name;
-                }
-              }
-            });
+      let tabs = this.tbsArr;
+      let activeName = this.tbsValue;
+      if (activeName === targetName) {
+        tabs.forEach((tab, index) => {
+          if (tab.name === targetName) {
+            let nextTab = tabs[index + 1] || tabs[index - 1];
+            if (nextTab) {
+              activeName = nextTab.name;
+            }
           }
-          //shou
-          if ( targetName!=="HomeContent") {
-             this.tbsArr = tabs.filter(tab => {
-             return tab.name != targetName});
-          }
-          
-           this.tbsValue = activeName;
-        }
-  
+        });
+      }
+      //shou
+      if (targetName !== "HomeContent") {
+        this.tbsArr = tabs.filter(tab => {
+          return tab.name != targetName;
+        });
+      }
+      if (activeName !== "HomeContent") {
+        this.$router.push(activeName);
+      }
+
+      this.tbsValue = activeName;
+    }
   }
 };
 </script>
@@ -169,11 +177,13 @@ export default {
   background: cornflowerblue;
 }
 .el-container > .el-main {
-   padding: 0;
+  padding: 0;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
 }
-
+.content {
+  padding: 0 15px;
+}
 </style>

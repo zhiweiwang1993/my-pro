@@ -4,6 +4,7 @@ import Login from '@/module/Login'
 import Home from '@/module/Home'
 import Content from '@/module/Content'
 import WorkPlan from '@/module/WorkPlan'
+import WorkStatistics from '@/module/WorkStatistics'
 
 
 Vue.use(Router)
@@ -16,7 +17,7 @@ export default new Router({
       children:[
         {path: 'Content',name: 'Content',component: Content},
         {path: 'WorkPlan',name: 'WorkPlan',component: WorkPlan},
-        {path: 'map',name: 'map',component: Content},
+        {path: 'WorkStatistics',name: 'WorkStatistics',component: WorkStatistics},
       ]
     },
   ]
