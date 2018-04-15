@@ -66,7 +66,7 @@ export default {
       msg: "首页",
       isCollapse: false,
       navList: tools.getCache("UserInfo").MenuList,
-      tbsArr: [
+      tbsArr: tools.getCache("tbsArr",this.tbsArr) || [
         {
           title: "首页",
           name: "HomeContent",
@@ -75,14 +75,15 @@ export default {
       ],
       tabIndex: 1,
       MenuArr: this.getMenuArr(tools.getCache("UserInfo").MenuList),
-      tbsValue: "HomeContent"
+      tbsValue: this.$route.path 
+      
     };
   },
 
   computed: {
     onRoutes() {
       return this.$route.path;
-    }
+    },
   },
   methods: {
     selectMenu(index, indexPath) {
@@ -130,10 +131,12 @@ export default {
       }
     },
     addTab(targetName) {
-      if (this.tbsArr.indexOf(this.MenuArr[targetName]) == -1) {
+      if ( this.tbsArr.filter((item)=>item.name==targetName).length== 0) {
         this.tbsArr.push(this.MenuArr[targetName]);
       }
       this.tbsValue = targetName;
+       //缓存tbs
+      tools.setCache("tbsArr",this.tbsArr)
     },
     removeTab(targetName) {
       let tabs = this.tbsArr;
@@ -159,6 +162,8 @@ export default {
       }
 
       this.tbsValue = activeName;
+      //缓存tbs
+      tools.setCache("tbsArr",this.tbsArr)
     }
   }
 };
